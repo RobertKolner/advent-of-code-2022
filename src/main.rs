@@ -35,6 +35,7 @@ async fn main() {
     let solution = match args.day {
         1 => solutions::day01::solve(result, !args.adv),
         2 => solutions::day02::solve(result, !args.adv),
+        3 => solutions::day03::solve(result, !args.adv),
         _ => format!("none, invalide day {}", args.day),
     };
 
