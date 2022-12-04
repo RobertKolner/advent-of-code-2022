@@ -11,19 +11,19 @@ pub fn solve(input_data: Option<String>, simple: bool) -> String {
     let data = input_data.unwrap_or(String::from(EXAMPLE));
 
     let mut letter_values = HashMap::<char, u32>::new();
-    let ascii_lower = "abcdefghijklmnopqrstuvwxyz";
-    let ascii_upper = ascii_lower.to_uppercase();
+    let ascii_lower = "abcdefghijklmnopqrstuvwxyz".chars();
+    let ascii_upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".chars();
 
-    for (i, c) in ascii_lower.chars().enumerate() {
+    for (i, c) in ascii_lower.enumerate() {
         letter_values.insert(c, (i as u32) + 1);
     }
-    for (i, c) in ascii_upper.chars().enumerate() {
+    for (i, c) in ascii_upper.enumerate() {
         letter_values.insert(c, (i as u32) + 27);
     }
 
     let lines = data.trim().split("\n");
     if simple {
-        let common_letters = lines
+        let priorities = lines
             .map(|line: &str| {
                 (
                     line[..line.len() / 2].chars().collect::<HashSet<char>>(),
@@ -34,9 +34,7 @@ pub fn solve(input_data: Option<String>, simple: bool) -> String {
                 s1.into_iter()
                     .filter(|c| s2.contains(c))
                     .collect::<HashSet<char>>()
-            });
-
-        let priorities = common_letters
+            })
             .map(|chars| chars.iter().map(|c| letter_values[c]).sum::<u32>())
             .sum::<u32>();
 

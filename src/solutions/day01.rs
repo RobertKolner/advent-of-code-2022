@@ -23,7 +23,7 @@ pub fn solve(input_data: Option<String>, simple: bool) -> String {
     });
 
     if simple {
-        format!("{}", calories_per_elf.max().unwrap())
+        format!("{}", calories_per_elf.max().unwrap_or(0))
     } else {
         let mut calories_per_elf_vec = calories_per_elf.collect::<Vec<i32>>();
         calories_per_elf_vec.sort_by(|a, b| b.cmp(a));
