@@ -36,7 +36,8 @@ async fn main() {
         1 => solutions::day01::solve(result, !args.adv),
         2 => solutions::day02::solve(result, !args.adv),
         3 => solutions::day03::solve(result, !args.adv),
-        _ => format!("none, invalide day {}", args.day),
+        4 => solutions::day04::solve(result, !args.adv),
+        _ => format!("none, invalid day {}", args.day),
     };
 
     println!("Solution: {}", solution);
