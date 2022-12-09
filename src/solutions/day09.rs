@@ -9,37 +9,47 @@ D 1
 L 5
 R 2";
 
-pub fn solve(input_data: Option<String>, _simple: bool) -> String {
+pub fn solve(input_data: Option<String>, simple: bool) -> String {
     let data = input_data.unwrap_or(String::from(EXAMPLE));
+    let rope_length = if simple { 2 } else { 10 };
 
     let mut visited_cells = HashSet::<(i32, i32)>::from([(0, 0)]);
 
-    let mut head = (0, 0);
-    let mut tail = (0, 0);
-
-    let mut check_tail = |old_head: (i32, i32), new_head: (i32, i32)| {
-        let tail_diff = ((tail.0 - new_head.0), (tail.1 - new_head.1));
-        let new_tail_diff = (tail_diff.0.clamp(-1, 1), tail_diff.1.clamp(-1, 1));
-        if tail_diff != new_tail_diff {
-            tail = old_head;
-            visited_cells.insert(tail);
-        }
-    };
+    let mut rope = Vec::<(i32, i32)>::with_capacity(rope_length);
+    for _ in 0..rope_length {
+        rope.push((0, 0));
+    }
 
     for line in data.trim().split("\n") {
         let (direction, amount_str) = line.split_once(" ").unwrap();
         let amount = amount_str.parse::<i32>().unwrap();
 
         for _ in 0..amount {
-            let old_head = head.clone();
-            head = match direction {
+            let head = rope[0];
+            rope[0] = match direction {
                 "U" => (head.0, head.1 + 1),
                 "D" => (head.0, head.1 - 1),
                 "L" => (head.0 - 1, head.1),
                 "R" => (head.0 + 1, head.1),
                 d => panic!("Invalid direction {}", d),
             };
-            check_tail(old_head, head);
+
+            for i in 0..rope.len() - 1 {
+                let knot_front = rope[i];
+                let knot_back = rope[i + 1];
+
+                let diff = (knot_front.0 - knot_back.0, knot_front.1 - knot_back.1);
+                rope[i + 1] = match diff {
+                    (0, 0) => continue,
+                    (dh, 0) if dh.abs() > 1 => (knot_back.0 + dh.clamp(-1, 1), knot_back.1),
+                    (0, dv) if dv.abs() > 1 => (knot_back.0, knot_back.1 + dv.clamp(-1, 1)),
+                    (dh, dv) if dh.abs() > 1 || dv.abs() > 1 => {
+                        (knot_back.0 + dh.clamp(-1, 1), knot_back.1 + dv.clamp(-1, 1))
+                    }
+                    _ => continue,
+                };
+            }
+            visited_cells.insert(*rope.last().unwrap());
         }
     }
 
