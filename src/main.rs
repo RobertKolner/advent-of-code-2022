@@ -42,6 +42,7 @@ async fn main() {
         7 => solutions::day07::solve(result, !args.adv),
         8 => solutions::day08::solve(result, !args.adv),
         9 => solutions::day09::solve(result, !args.adv),
+        10 => solutions::day10::solve(result, !args.adv),
         _ => format!("none, invalid day {}", args.day),
     };
 
